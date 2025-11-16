@@ -1,69 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
     <title>NYT News Archive</title>
-</head>
-<body>
+  </head>
+  <body>
     <header>
-        <a href="index.html" class="logo">NYT</a>
-        <h1>NYT News Archive</h1>
-        <nav>
-            <a href="">New</a>
-            <a href="">Top Stories</a>
-            <a href="">Popular</a>
-        </nav>
-        <input type="search" placeholder="Search articles...">
+      <a href="index.html" class="logo">NYT</a>
+      <nav>
+        <a href="">New</a>
+        <a href="">Top Stories</a>
+        <a href="">Popular</a>
+      </nav>
+      <input type="search" placeholder="Search articles..." />
     </header>
 
     <main>
-        <ul class="articles-list">
-            <li class="article">
-                <span class="article-number">1.</span>
-                <h2 class="headline"><a href="#">Sample Headline 1</a></h2>
-                <p class="meta"><span class="theme">Politics</span> | <span class="date">November 15, 2025</span></p>
-            </li>
-            <li class="article">
-                <span class="article-number">2.</span>
-                <h2 class="headline"><a href="#">Sample Headline 2</a></h2>
-                <p class="meta"><span class="theme">Technology</span> | <span class="date">November 14, 2025</span></p>
-            </li>
-            <li class="article">
-                <span class="article-number">3.</span>
-                <h2 class="headline"><a href="#">Sample Headline 3</a></h2>
-                <p class="meta"><span class="theme">Sports</span> | <span class="date">November 13, 2025</span></p>
-            </li>
-            <li class="article">
-                <span class="article-number">4.</span>
-                <h2 class="headline"><a href="#">Sample Headline 4</a></h2>
-                <p class="meta"><span class="theme">World</span> | <span class="date">November 12, 2025</span></p>
-            </li>
-            <li class="article">
-                <span class="article-number">5.</span>
-                <h2 class="headline"><a href="#">Sample Headline 5</a></h2>
-                <p class="meta"><span class="theme">Business</span> | <span class="date">November 11, 2025</span></p>
-            </li>
-            <li class="article">
-                <span class="article-number">6.</span>
-                <h2 class="headline"><a href="#">Sample Headline 6</a></h2>
-                <p class="meta"><span class="theme">Arts</span> | <span class="date">November 10, 2025</span></p>
-            </li>
-        </ul>
+      <ul class="articles-list">
+        <li class="article">
+          <span class="article-number">1.</span>
+          <h2 class="headline"><a href="#">Sample Headline 1</a></h2>
+          <p class="meta">
+            <span class="theme">Politics</span> |
+            <span class="date">November 15, 2025</span>
+          </p>
+        </li>
+        <li class="article">
+          <span class="article-number">2.</span>
+          <h2 class="headline"><a href="#">Sample Headline 2</a></h2>
+          <p class="meta">
+            <span class="theme">Technology</span> |
+            <span class="date">November 14, 2025</span>
+          </p>
+        </li>
+        <li class="article">
+          <span class="article-number">3.</span>
+          <h2 class="headline"><a href="#">Sample Headline 3</a></h2>
+          <p class="meta">
+            <span class="theme">Sports</span> |
+            <span class="date">November 13, 2025</span>
+          </p>
+        </li>
+        <li class="article">
+          <span class="article-number">4.</span>
+          <h2 class="headline"><a href="#">Sample Headline 4</a></h2>
+          <p class="meta">
+            <span class="theme">World</span> |
+            <span class="date">November 12, 2025</span>
+          </p>
+        </li>
+        <li class="article">
+          <span class="article-number">5.</span>
+          <h2 class="headline"><a href="#">Sample Headline 5</a></h2>
+          <p class="meta">
+            <span class="theme">Business</span> |
+            <span class="date">November 11, 2025</span>
+          </p>
+        </li>
+        <li class="article">
+          <span class="article-number">6.</span>
+          <h2 class="headline"><a href="#">Sample Headline 6</a></h2>
+          <p class="meta">
+            <span class="theme">Arts</span> |
+            <span class="date">November 10, 2025</span>
+          </p>
+        </li>
+      </ul>
 
-        <div class="pagination">
-            <a href="#">&lt; Prev</a> | <a href="#">Next &gt;</a>
-        </div>
+      <div class="pagination">
+        <a href="#">&lt; Prev</a> | <a href="#">Next &gt;</a>
+      </div>
 
-        <section id="chart-section">
-            <h3>Article Analytics</h3>
-            <div id="chart-placeholder">Chart will be displayed here.</div>
-        </section>
+      <section id="chart-section">
+        <h3>Article Analytics</h3>
+        <div id="chart-placeholder">Chart will be displayed here.</div>
+      </section>
     </main>
 
     <footer>
-        <p>&copy; 2025 NYT News Archive. All rights reserved.</p>
+      <p>
+        Data provided by
+        <a href="https://developer.nytimes.com/" target="_blank"
+          >The New York Times</a
+        >
+      </p>
+      <p>
+        &copy; 2025 NYT News Archive |
+        <a href="https://developer.nytimes.com/terms" target="_blank"
+          >API Terms of Use</a
+        >
+      </p>
     </footer>
-</body>
+  </body>
 </html>
