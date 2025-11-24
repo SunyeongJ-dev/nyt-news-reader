@@ -79,6 +79,21 @@ input[type="search"] {
   max-inline-size: 30%;
 }
 
+nav a.active {
+  color: var(--secondary-color);
+  position: relative;
+}
+
+nav a.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -5px;
+  height: 4px;
+  background: var(--secondary-color);
+}
+
 main {
   background-color: var(--background-color);
   max-width: 1000px;
@@ -238,6 +253,10 @@ footer a {
     min-width: auto;
   }
 
+  nav a.active::after {
+    bottom: -4px;
+  }
+
   input[type="search"] {
     width: 100%;
     flex-basis: 100%;
@@ -278,7 +297,8 @@ footer a {
 @media (max-width: 540px) {
   header {
     flex-direction: column;
-    padding: 8px 10px;
+    position: relative;
+    padding-bottom: 12px;
     gap: 8px;
   }
 
@@ -293,6 +313,11 @@ footer a {
 
   nav a {
     padding: 4px 0;
+  }
+
+  nav a.active::after {
+    bottom: 0;
+    height: 3px;
   }
 
   input[type="search"] {
