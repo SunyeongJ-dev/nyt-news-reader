@@ -1,0 +1,28 @@
+{
+  "name": "module4-sunyeongj-dev",
+  "version": "1.0.0",
+  "description": "[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/GnMkoLD4)\r # Module 4 - [Name of your Web Application]",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DGL213-Applied-JavaScript-2025FA-CVS1-I/module4-SunyeongJ-dev.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DGL213-Applied-JavaScript-2025FA-CVS1-I/module4-SunyeongJ-dev/issues"
+  },
+  "homepage": "https://github.com/DGL213-Applied-JavaScript-2025FA-CVS1-I/module4-SunyeongJ-dev#readme",
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.1.1",
+    "vite": "^7.2.4"
+  }
+}
