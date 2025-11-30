@@ -1,33 +1,42 @@
 import { useState, useEffect } from "react";
-import { fetchArchive, fetchTopStories } from "./services/nytApi";
+import { fetchArchive, fetchTopStories, fetchMostPopular } from "./services/nytApi";
 
 function App() {
   const [activeTab, setActiveTab] = useState("All");
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [selectedTheme, setSelectedTheme] = useState("home");
+  const [popularPeriod, setPopularPeriod] = useState(1);
 
   useEffect(() => {
-    if (activeTab !== "Top Stories") return;
-
     const loadArticles = async () => {
-      const today = new Date();
-      const year = today.getFullYear();
-      const month = today.getMonth() + 1;
-
       setLoading(true);
+      setArticles([]);
+
       try {
-        const data = await fetchTopStories();
-        setArticles(data);
-      } catch (err) {
-        console.error(err);
-        setArticles([]);
+        let fetchedArticles = [];
+
+        if (activeTab === "All") {
+          const now = new Date();
+          const year = now.getFullYear();
+          const month = now.getMonth() + 1;
+          fetchedArticles = []; // Temporary, Archive API does not work right now
+        } else if (activeTab === "Top Stories") {
+          fetchedArticles = await fetchTopStories(selectedTheme);
+        } else if (activeTab === "Popular") {
+          fetchedArticles = await fetchMostPopular(popularPeriod);
+        } else if (activeTab === "Bookmarks") {
+          fetchedArticles = []; // Bookmarks functionality not implemented yet
+        }
+        setArticles(fetchedArticles);
+      } catch (error) {
+        console.error("Error fetching articles:", error);
       } finally {
         setLoading(false);
       }
     };
-
     loadArticles();
-  }, [activeTab]);
+  }, [activeTab, selectedTheme, popularPeriod]);
   return (
     <>
       <header>
@@ -95,7 +104,7 @@ function App() {
                 </span>
                 <div className="article-content">
                   <h2 className="headline">
-                    <a href={article.url}>{article.title}</a>
+                    <a href={article.url} target="_blank">{article.title}</a>
                   </h2>
                   <p className="article-meta">
                     <span className="theme">{article.section} | </span>
