@@ -20,7 +20,7 @@ function App() {
           const now = new Date();
           const year = now.getFullYear();
           const month = now.getMonth() + 1;
-          fetchedArticles = []; // Temporary, Archive API does not work right now
+          fetchedArticles = await fetchArchive(year, month); // Temporary, Archive API does not work right now
         } else if (activeTab === "Top Stories") {
           fetchedArticles = await fetchTopStories(selectedTheme);
         } else if (activeTab === "Popular") {

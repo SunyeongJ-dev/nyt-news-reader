@@ -10,13 +10,4 @@ export default defineConfig({
       },
     }),
   ],
-  server: {
-    proxy: {
-      '/nyt-api': {
-        target: 'https://api.nytimes.com',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/nyt-api/, '')
-      }
-    }
-  }
 })
