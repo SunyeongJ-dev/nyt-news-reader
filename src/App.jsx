@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 function App() {
+  const [activeTab, setActiveTab] = useState("All");
   return (
     <>
       <header>
@@ -9,12 +10,46 @@ function App() {
             NYT
           </a>
           <nav>
-            <a href="" class="active">
+            <a
+              href=""
+              className={activeTab === "All" ? "active" : ""}
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveTab("All");
+              }}
+            >
               All
             </a>
-            <a href="">Top Stories</a>
-            <a href="">Popular</a>
-            <a href="">Bookmarks</a>
+            <a
+              href=""
+              className={activeTab === "Top Stories" ? "active" : ""}
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveTab("Top Stories");
+              }}
+            >
+              Top Stories
+            </a>
+            <a
+              href=""
+              className={activeTab === "Popular" ? "active" : ""}
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveTab("Popular");
+              }}
+            >
+              Popular
+            </a>
+            <a
+              href=""
+              className={activeTab === "Bookmarks" ? "active" : ""}
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveTab("Bookmarks");
+              }}
+            >
+              Bookmarks
+            </a>
           </nav>
         </div>
         <input type="search" placeholder="Search articles..." />
