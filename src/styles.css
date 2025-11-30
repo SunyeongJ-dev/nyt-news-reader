@@ -106,7 +106,7 @@ main {
   background-color: var(--background-color);
 }
 
-.article {
+.article-item {
   padding: 15px 0;
   border-bottom: 1px solid var(--border-color);
   display: flex;
@@ -114,7 +114,7 @@ main {
   align-items: flex-start;
 }
 
-.article:last-child {
+.article-item:last-child {
   border-bottom: none;
 }
 

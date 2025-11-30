@@ -1,7 +1,33 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { fetchArchive, fetchTopStories } from "./services/nytApi";
 
 function App() {
   const [activeTab, setActiveTab] = useState("All");
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (activeTab !== "Top Stories") return;
+
+    const loadArticles = async () => {
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = today.getMonth() + 1;
+
+      setLoading(true);
+      try {
+        const data = await fetchTopStories();
+        setArticles(data);
+      } catch (err) {
+        console.error(err);
+        setArticles([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadArticles();
+  }, [activeTab]);
   return (
     <>
       <header>
@@ -56,108 +82,43 @@ function App() {
       </header>
 
       <main>
-        <ul class="articles-list">
-          <li class="article">
-            <span class="article-number">1.</span>
-            <div class="article-content">
-              <h2 class="headline">
-                <a href="#">Sample Headline 1</a>
-              </h2>
-              <p class="meta">
-                <span class="theme">Politics</span> |
-                <span class="date">November 15, 2025</span>
-              </p>
-            </div>
-            <button class="bookmark-btn" title="Bookmark">
-              ☆
-            </button>
-          </li>
-          <li class="article">
-            <span class="article-number">2.</span>
-            <div class="article-content">
-              <h2 class="headline">
-                <a href="#">Sample Headline 2</a>
-              </h2>
-              <p class="meta">
-                <span class="theme">Technology</span> |
-                <span class="date">November 14, 2025</span>
-              </p>
-            </div>
-            <button class="bookmark-btn" title="Bookmark">
-              ☆
-            </button>
-          </li>
-          <li class="article">
-            <span class="article-number">3.</span>
-            <div class="article-content">
-              <h2 class="headline">
-                <a href="#">Sample Headline 3</a>
-              </h2>
-              <p class="meta">
-                <span class="theme">Sports</span> |
-                <span class="date">November 13, 2025</span>
-              </p>
-            </div>
-            <button class="bookmark-btn" title="Bookmark">
-              ☆
-            </button>
-          </li>
-          <li class="article">
-            <span class="article-number">4.</span>
-            <div class="article-content">
-              <h2 class="headline">
-                <a href="#">Sample Headline 4</a>
-              </h2>
-              <p class="meta">
-                <span class="theme">World</span> |
-                <span class="date">November 12, 2025</span>
-              </p>
-            </div>
-            <button class="bookmark-btn" title="Bookmark">
-              ☆
-            </button>
-          </li>
-          <li class="article">
-            <span class="article-number">5.</span>
-            <div class="article-content">
-              <h2 class="headline">
-                <a href="#">Sample Headline 5</a>
-              </h2>
-              <p class="meta">
-                <span class="theme">Business</span> |
-                <span class="date">November 11, 2025</span>
-              </p>
-            </div>
-            <button class="bookmark-btn" title="Bookmark">
-              ☆
-            </button>
-          </li>
-          <li class="article">
-            <span class="article-number">6.</span>
-            <div class="article-content">
-              <h2 class="headline">
-                <a href="#">Sample Headline 6</a>
-              </h2>
-              <p class="meta">
-                <span class="theme">Arts</span> |
-                <span class="date">November 10, 2025</span>
-              </p>
-            </div>
-            <button class="bookmark-btn" title="Bookmark">
-              ☆
-            </button>
-          </li>
-        </ul>
-
-        <div class="pagination">
-          <a href="#">&lt; Prev</a> | <a href="#">Next &gt;</a>
-        </div>
-
-        <section id="chart-section">
-          <h3>Article Analytics</h3>
-          <div id="chart-placeholder">Chart will be displayed here.</div>
-        </section>
+        {loading ? (
+          <p>Loading articles...</p>
+        ) : articles.length === 0 ? (
+          <p>No articles found.</p>
+        ) : (
+          <ul className="article-list">
+            {articles.map((article) => (
+              <li key={article.id} className="article-item">
+                <span className="article-number">
+                  {articles.indexOf(article) + 1}
+                </span>
+                <div className="article-content">
+                  <h2 className="headline">
+                    <a href={article.url}>{article.title}</a>
+                  </h2>
+                  <p className="article-meta">
+                    <span className="theme">{article.section} | </span>
+                    <span className="date">{article.pub_date}</span>
+                  </p>
+                </div>
+                <button class="bookmark-btn" title="Bookmark">
+                  ☆
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
       </main>
+
+      <div class="pagination">
+        <a href="#">&lt; Prev</a> | <a href="#">Next &gt;</a>
+      </div>
+
+      <section id="chart-section">
+        <h3>Article Analytics</h3>
+        <div id="chart-placeholder">Chart will be displayed here.</div>
+      </section>
 
       <footer>
         <p>
