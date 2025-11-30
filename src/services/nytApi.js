@@ -1,9 +1,8 @@
-const API_KEY = import.meta.env.VITE_NYT_API_KEY;
-const BASE_URL = "https://api.nytimes.com/svc";
+const BASE_URL = "http://localhost:3000/api";
 
 export const fetchArchive = async (year, month) => {
-  const response = await fetch(
-    `${BASE_URL}/archive/v1/${year}/${month}.json?api-key=${API_KEY}`
+const response = await fetch(
+    `${BASE_URL}/archive/${year}/${month}` 
   );
   // Authentication error handling
   if (!response.ok) {
@@ -29,7 +28,7 @@ export const fetchArchive = async (year, month) => {
 
 export const fetchTopStories = async (theme = "home") => {
   const response = await fetch(
-    `${BASE_URL}/topstories/v2/${theme}.json?api-key=${API_KEY}`
+    `${BASE_URL}/topstories/v2/${theme}`
   );
   if (!response.ok) {
     const errorText = await response.text();
@@ -54,7 +53,7 @@ export const fetchTopStories = async (theme = "home") => {
 
 export const fetchMostPopular = async (period = 1) => {
   const response = await fetch(
-    `${BASE_URL}/mostpopular/v2/viewed/${period}.json?api-key=${API_KEY}`
+    `${BASE_URL}/mostpopular/v2/viewed/${period}`
   );
 
   if (!response.ok) {
