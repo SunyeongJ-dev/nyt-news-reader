@@ -1,8 +1,13 @@
 const BASE_URL = "http://localhost:3000/api";
 
 export const fetchArchive = async (year, month) => {
-const response = await fetch(
-    `${BASE_URL}/archive/${year}/${month}` 
+  const paddedMonth = String(month).padStart(2, "0");
+
+  const beginDate = `${year}${paddedMonth}01`;
+  const endDate = `${year}${paddedMonth}31`;
+
+  const response = await fetch(
+    `${BASE_URL}/search?begin_date=${beginDate}&end_date=${endDate}&sort=newest`
   );
   // Authentication error handling
   if (!response.ok) {
@@ -27,9 +32,7 @@ const response = await fetch(
 };
 
 export const fetchTopStories = async (theme = "home") => {
-  const response = await fetch(
-    `${BASE_URL}/topstories/v2/${theme}`
-  );
+  const response = await fetch(`${BASE_URL}/topstories/v2/${theme}`);
   if (!response.ok) {
     const errorText = await response.text();
     console.error(errorText);
@@ -52,9 +55,7 @@ export const fetchTopStories = async (theme = "home") => {
 };
 
 export const fetchMostPopular = async (period = 1) => {
-  const response = await fetch(
-    `${BASE_URL}/mostpopular/v2/viewed/${period}`
-  );
+  const response = await fetch(`${BASE_URL}/mostpopular/v2/viewed/${period}`);
 
   if (!response.ok) {
     const errorText = await response.text();

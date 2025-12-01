@@ -1,10 +1,20 @@
 import { useState, useEffect } from "react";
-import { fetchArchive, fetchTopStories, fetchMostPopular } from "./services/nytApi";
+import {
+  fetchArchive,
+  fetchTopStories,
+  fetchMostPopular,
+} from "./services/nytApi";
 
 function App() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+  
   const [activeTab, setActiveTab] = useState("All");
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [selectedYear, setSelectedYear] = useState(year);
+  const [selectedMonth, setSelectedMonth] = useState(month);
   const [selectedTheme, setSelectedTheme] = useState("home");
   const [popularPeriod, setPopularPeriod] = useState(1);
 
@@ -17,12 +27,7 @@ function App() {
         let fetchedArticles = [];
 
         if (activeTab === "All") {
-          const now = new Date();
-          /* const year = now.getFullYear();
-          const month = now.getMonth() + 1; */
-          const year = 2025;
-          const month = 10;
-          fetchedArticles = await fetchArchive(year, month); // Temporary, Archive API does not work right now
+          fetchedArticles = await fetchArchive(selectedYear, selectedMonth);
         } else if (activeTab === "Top Stories") {
           fetchedArticles = await fetchTopStories(selectedTheme);
         } else if (activeTab === "Popular") {
@@ -106,7 +111,9 @@ function App() {
                 </span>
                 <div className="article-content">
                   <h2 className="headline">
-                    <a href={article.url} target="_blank">{article.title}</a>
+                    <a href={article.url} target="_blank">
+                      {article.title}
+                    </a>
                   </h2>
                   <p className="article-meta">
                     <span className="theme">{article.section} | </span>
