@@ -28,7 +28,7 @@ export const fetchArchive = async (year, month) => {
       }),
       url: doc.web_url,
     }))
-    .slice(0, 30); // Limit to 30 articles
+    .slice(0, 100);
 };
 
 export const fetchTopStories = async (theme = "home") => {
@@ -51,7 +51,7 @@ export const fetchTopStories = async (theme = "home") => {
       }),
       url: item.url,
     }))
-    .slice(0, 30);
+    .slice(0, 100);
 };
 
 export const fetchMostPopular = async (period = 1) => {
@@ -76,5 +76,5 @@ export const fetchMostPopular = async (period = 1) => {
       }),
       url: item.url,
     }))
-    .slice(0, 30);
+    .slice(0, 100);
 };
