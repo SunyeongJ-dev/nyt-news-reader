@@ -13,12 +13,11 @@ function App() {
   const sections = [
     "arts",
     "automobiles",
-    "books/review",
+    "books",
     "business",
     "fashion",
     "food",
     "health",
-    "home",
     "insider",
     "magazine",
     "movies",
@@ -36,7 +35,7 @@ function App() {
     "travel",
     "upshot",
     "us",
-    "world"
+    "world",
   ];
 
   const [activeTab, setActiveTab] = useState("All");
@@ -171,6 +170,27 @@ function App() {
                   </option>
                 );
               })}
+            </select>
+          </div>
+        )}
+
+        {activeTab === "Top Stories" && (
+          <div>
+            <select
+              value={selectedSection}
+              onChange={(e) => setSelectedSection(e.target.value)}
+            >
+              <option value="home">Home</option>
+              {sections.map((section) => (
+                <option key={section} value={section}>
+                  {section
+                    .replace(/\b\w/g, (c) => c.toUpperCase())
+                    .replace("Nyregion", "NY Region")
+                    .replace("T-magazine", "T Magazine")
+                    .replace("Sundayreview", "Sunday Review")
+                    .replace("Us", "US")}
+                </option>
+              ))}
             </select>
           </div>
         )}
