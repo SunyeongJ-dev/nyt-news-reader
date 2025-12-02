@@ -10,13 +10,41 @@ function App() {
   const year = now.getFullYear();
   const month = now.getMonth() + 1;
   const years = Array.from({ length: 30 }, (_, i) => year - i);
+  const sections = [
+    "arts",
+    "automobiles",
+    "books/review",
+    "business",
+    "fashion",
+    "food",
+    "health",
+    "home",
+    "insider",
+    "magazine",
+    "movies",
+    "nyregion",
+    "obituaries",
+    "opinion",
+    "politics",
+    "realestate",
+    "science",
+    "sports",
+    "sundayreview",
+    "technology",
+    "theater",
+    "t-magazine",
+    "travel",
+    "upshot",
+    "us",
+    "world"
+  ];
 
   const [activeTab, setActiveTab] = useState("All");
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedYear, setSelectedYear] = useState(year);
   const [selectedMonth, setSelectedMonth] = useState(month);
-  const [selectedTheme, setSelectedTheme] = useState("home");
+  const [selectedSection, setSelectedSection] = useState("home");
   const [popularPeriod, setPopularPeriod] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -31,7 +59,7 @@ function App() {
         if (activeTab === "All") {
           fetchedArticles = await fetchArchive(selectedYear, selectedMonth);
         } else if (activeTab === "Top Stories") {
-          fetchedArticles = await fetchTopStories(selectedTheme);
+          fetchedArticles = await fetchTopStories(selectedSection);
         } else if (activeTab === "Popular") {
           fetchedArticles = await fetchMostPopular(popularPeriod);
         } else if (activeTab === "Bookmarks") {
@@ -59,7 +87,7 @@ function App() {
     selectedYear,
     selectedMonth,
     searchQuery,
-    selectedTheme,
+    selectedSection,
     popularPeriod,
   ]);
   return (
@@ -166,7 +194,7 @@ function App() {
                     </a>
                   </h2>
                   <p className="article-meta">
-                    <span className="theme">{article.section} | </span>
+                    <span className="section">{article.section} | </span>
                     <span className="date">{article.pub_date}</span>
                   </p>
                 </div>

@@ -149,7 +149,7 @@ main {
   font-family: var(--font-family-sans-serif);
 }
 
-.theme {
+.section {
   color: var(--secondary-color);
   font-weight: 600;
   text-transform: uppercase;
