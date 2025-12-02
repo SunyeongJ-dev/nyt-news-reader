@@ -161,6 +161,48 @@ main {
   font-style: italic;
 }
 
+.filters {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--background-color);
+}
+
+.filters > div {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-family: var(--font-family-sans-serif);
+}
+
+.filters select {
+  padding: 6px 10px;
+  border: 1px solid var(--border-color);
+  font-size: 12px;
+  font-family: var(--font-family-sans-serif);
+  background-color: var(--background-color);
+  color: var(--primary-color);
+  cursor: pointer;
+  text-transform: capitalize;
+}
+
+.filters select:hover {
+  border-color: var(--secondary-color);
+}
+
+.filters a {
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 6px 10px;
+}
+
+.filters a:hover {
+  color: var(--secondary-color);
+}
+
 .filters a.active {
   color: var(--secondary-color);
   font-weight: 700;

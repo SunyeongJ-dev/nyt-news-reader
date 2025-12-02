@@ -2,6 +2,8 @@ import "dotenv/config";
 import express from "express";
 import fetch from "node-fetch";
 import cors from "cors";
+import mysql from "mysql2";
+import "dotenv/config";
 
 const app = express();
 const PORT = 3000;
@@ -11,7 +13,62 @@ const corsOptions = {
   origin: "http://localhost:5173",
   optionsSuccessStatus: 200,
 };
+
 app.use(cors(corsOptions));
+
+// MySQL Database connection
+const db = mysql.createConnection({
+  host: process.env.DB_HOST || "localhost",
+  user: process.env.DB_USER || "root",
+  password: process.env.DB_PASSWORD || "",
+});
+
+db.connect((err) => {
+  if (err) {
+    console.error("Error connecting to the database:", err);
+    return;
+  }
+  console.log("Connected to the MySQL database.");
+
+  // Create database
+  db.query(`CREATE DATABASE IF NOT EXISTS nyt_bookmarks`, (err) => {
+    if (err) {
+      console.error("Error creating nyt_bookmarks database:", err);
+      return;
+    }
+    console.log("nyt_bookmarks database is ready.");
+
+    // Select database
+    db.query("USE nyt_bookmarks", (err) => {
+      if (err) {
+        console.error("Error selecting nyt_bookmarks database:", err);
+        return;
+      }
+      console.log("Using nyt_bookmarks database.");
+
+      // Create bookmarks table
+      db.query(
+        `
+          CREATE TABLE IF NOT EXISTS bookmarks (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          user_id VARCHAR(36) NOT NULL,
+          article_id VARCHAR(255) NOT NULL,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          UNIQUE KEY unique_bookmark (user_id, article_id)
+          )
+          `,
+        (err) => {
+          if (err) {
+            console.error("Error creating bookmarks table:", err);
+            return;
+          }
+          console.log("Bookmarks table is ready.");
+        }
+      );
+    });
+  });
+});
+
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -89,4 +146,51 @@ app.get("/api/mostpopular/v2/viewed/:period", async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Node.js server running on http://localhost:${PORT}`);
+});
+
+// Bookmark toggle
+app.post("/api/bookmarks", async (req, res) => {
+  const { userId, articleId } = req.body;
+
+  try {
+    const [bookmarked] = await db.promise().query(
+      "SELECT * FROM bookmarks WHERE user_id = ? AND article_id = ?",
+      [userId, articleId]
+    );
+
+    if (bookmarked.length > 0) {
+      await db.promise().query(
+        "DELETE FROM bookmarks WHERE user_id = ? AND article_id = ?",
+        [userId, articleId]
+      );
+      res.json({ bookmarked: false });
+    } else {
+      await db.promise().query(
+        "INSERT INTO bookmarks (user_id, article_id) VALUES (?, ?)",
+        [userId, articleId]
+      );
+      res.json({ bookmarked: true });
+    }
+  } catch (error) {
+    console.error("Error toggling bookmark:", error);
+    res.status(500).json({ error: "DB error during bookmark toggle." });
+  }
+});
+
+// Get bookmarks from DB
+app.get("/api/bookmarks", async (req, res) => {
+  const { userId } = req.query;
+
+  try {
+    const [rows] = await db.promise().query(
+      "SELECT article_id FROM bookmarks WHERE user_id = ?",
+      [userId]
+    );
+    const ids = rows.map((row) => row.article_id);
+    res.json(ids);
+
+  } catch (error) {
+    console.error("Error fetching bookmarks:", error);
+    res.status(500).json({ error: "DB error during fetching bookmarks." });
+  }
 });

@@ -67,6 +67,8 @@ function App() {
   const [popularPeriod, setPopularPeriod] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [bookmarks, setBookmarks] = useState([]);
+  const [userId, setUserId] = useState(null);
 
   // Pagination variables
   const articlesPerPage = 10;
@@ -95,6 +97,22 @@ function App() {
     ],
   };
 
+  // Set user ID and fetch bookmarks on initial load
+  useEffect(() => {
+    let id = localStorage.getItem("nyt_user_id");
+    if (!id) {
+      id = crypto.randomUUID();
+      localStorage.setItem("nyt_user_id", id);
+    }
+    setUserId(id);
+
+    fetch(`http://localhost:3000/api/bookmarks?userId=${id}`)
+      .then((response) => response.json())
+      .then((savedIds) => setBookmarks(savedIds.bookmarks || []))
+      .catch(() => setBookmarks([]));
+  }, []);
+
+  // Load articles when tabs or filters change
   useEffect(() => {
     const loadArticles = async () => {
       setLoading(true);
@@ -110,7 +128,9 @@ function App() {
         } else if (activeTab === "Popular") {
           fetchedArticles = await fetchMostPopular(popularPeriod);
         } else if (activeTab === "Bookmarks") {
-          fetchedArticles = []; // Bookmarks functionality not implemented yet
+          fetchedArticles = articles.filter((article) =>
+            bookmarks.includes(article.id)
+          );
         }
 
         if (searchQuery.trim()) {
@@ -141,8 +161,8 @@ function App() {
   return (
     <>
       <header>
-        <div class="container">
-          <a href="index.html" class="logo">
+        <div className="container">
+          <a href="index.html" className="logo">
             NYT
           </a>
           <nav>
@@ -309,8 +329,33 @@ function App() {
                     <span className="date">{article.pub_date}</span>
                   </p>
                 </div>
-                <button class="bookmark-btn" title="Bookmark">
-                  ☆
+                <button
+                  className={`bookmark-btn ${bookmarks.includes(article.id) ? 'bookmarked' : ''}`}
+                  title="Bookmark"
+                  onClick={() => {
+                    fetch("http://localhost:3000/api/bookmarks", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        userId,
+                        articleId: article.id,
+                      }),
+                    })
+                      .then((response) => response.json())
+                      .then((data) => {
+                        if (data.bookmarked) {
+                          setBookmarks([...bookmarks, article.id]);
+                        } else {
+                          setBookmarks(
+                            bookmarks.filter((id) => id !== article.id)
+                          );
+                        }
+                      });
+                  }}
+                >
+                  {bookmarks.includes(article.id) ? "★" : "☆"}
                 </button>
               </li>
             ))}
@@ -348,7 +393,7 @@ function App() {
         <h3>Article Analytics</h3>
         {articles.length > 0 ? (
           <div>
-            <Bar data={chartData}/>
+            <Bar data={chartData} />
           </div>
         ) : (
           <p>No analytics to display.</p>
