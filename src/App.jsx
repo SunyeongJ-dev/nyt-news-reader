@@ -9,7 +9,8 @@ function App() {
   const now = new Date();
   const year = now.getFullYear();
   const month = now.getMonth() + 1;
-  
+  const years = Array.from({ length: 30 }, (_, i) => year - i);
+
   const [activeTab, setActiveTab] = useState("All");
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -17,6 +18,7 @@ function App() {
   const [selectedMonth, setSelectedMonth] = useState(month);
   const [selectedTheme, setSelectedTheme] = useState("home");
   const [popularPeriod, setPopularPeriod] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const loadArticles = async () => {
@@ -35,15 +37,31 @@ function App() {
         } else if (activeTab === "Bookmarks") {
           fetchedArticles = []; // Bookmarks functionality not implemented yet
         }
+
+        if (searchQuery.trim()) {
+          const query = searchQuery.toLowerCase();
+          fetchedArticles = fetchedArticles.filter((article) =>
+            article.title.toLowerCase().includes(query)
+          );
+        }
+
         setArticles(fetchedArticles);
       } catch (error) {
-        console.error("Error fetching articles:", error);
+        console.error("Error:", error);
+        setArticles([]);
       } finally {
         setLoading(false);
       }
     };
     loadArticles();
-  }, [activeTab, selectedTheme, popularPeriod]);
+  }, [
+    activeTab,
+    selectedYear,
+    selectedMonth,
+    searchQuery,
+    selectedTheme,
+    popularPeriod,
+  ]);
   return (
     <>
       <header>
@@ -97,6 +115,38 @@ function App() {
         <input type="search" placeholder="Search articles..." />
       </header>
 
+      <div className="filters">
+        {activeTab === "All" && (
+          <div>
+            <select
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(Number(e.target.value))}
+            >
+              {years.map((yr) => (
+                <option key={yr} value={yr}>
+                  {yr}
+                </option>
+              ))}
+            </select>
+            <select
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(Number(e.target.value))}
+            >
+              {[...Array(12)].map((_, i) => {
+                const monthNum = i + 1;
+                const monthName = new Date(year, i).toLocaleString("en-CA", {
+                  month: "long",
+                });
+                return (
+                  <option key={monthNum} value={monthNum}>
+                    {monthName}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+        )}
+      </div>
       <main>
         {loading ? (
           <p>Loading articles...</p>
