@@ -4,6 +4,25 @@ import {
   fetchTopStories,
   fetchMostPopular,
 } from "./services/nytApi";
+import { Bar } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 function App() {
   const now = new Date();
@@ -37,6 +56,8 @@ function App() {
     "us",
     "world",
   ];
+
+  // State variables
   const [activeTab, setActiveTab] = useState("All");
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -45,8 +66,9 @@ function App() {
   const [selectedSection, setSelectedSection] = useState("home");
   const [popularPeriod, setPopularPeriod] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-
   const [currentPage, setCurrentPage] = useState(1);
+
+  // Pagination variables
   const articlesPerPage = 10;
   const indexOfLastArticle = currentPage * articlesPerPage;
   const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
@@ -55,6 +77,23 @@ function App() {
     indexOfLastArticle
   );
   const totalPages = Math.ceil(articles.length / articlesPerPage);
+
+  // Variables for the chart
+  const sectionCounts = articles.reduce((acc, article) => {
+    const section = article.section || "Unknown";
+    acc[section] = (acc[section] || 0) + 1;
+    return acc;
+  }, {});
+  const chartData = {
+    labels: Object.keys(sectionCounts),
+    datasets: [
+      {
+        label: "Articles per Section",
+        data: Object.values(sectionCounts),
+        backgroundColor: "#567b95",
+      },
+    ],
+  };
 
   useEffect(() => {
     const loadArticles = async () => {
@@ -98,6 +137,7 @@ function App() {
     selectedSection,
     popularPeriod,
   ]);
+
   return (
     <>
       <header>
@@ -306,7 +346,13 @@ function App() {
 
       <section id="chart-section">
         <h3>Article Analytics</h3>
-        <div id="chart-placeholder">Chart will be displayed here.</div>
+        {articles.length > 0 ? (
+          <div>
+            <Bar data={chartData}/>
+          </div>
+        ) : (
+          <p>No analytics to display.</p>
+        )}
       </section>
 
       <footer>
