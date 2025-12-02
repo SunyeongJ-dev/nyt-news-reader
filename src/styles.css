@@ -161,6 +161,11 @@ main {
   font-style: italic;
 }
 
+.filters a.active {
+  color: var(--secondary-color);
+  font-weight: 700;
+}
+
 .bookmark-btn {
   flex-shrink: 0;
   background: none;

@@ -194,6 +194,43 @@ function App() {
             </select>
           </div>
         )}
+
+        {activeTab === "Popular" && (
+          <div>
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                setPopularPeriod(1);
+              }}
+              className={popularPeriod === 1 ? "active" : ""}
+            >
+              1 Day
+            </a>
+            |
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                setPopularPeriod(7);
+              }}
+              className={popularPeriod === 7 ? "active" : ""}
+            >
+              7 Days
+            </a>
+            |
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                setPopularPeriod(30);
+              }}
+              className={popularPeriod === 30 ? "active" : ""}
+            >
+              30 Days
+            </a>
+          </div>
+        )}
       </div>
       <main>
         {loading ? (
