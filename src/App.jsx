@@ -37,7 +37,6 @@ function App() {
     "us",
     "world",
   ];
-
   const [activeTab, setActiveTab] = useState("All");
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -46,6 +45,16 @@ function App() {
   const [selectedSection, setSelectedSection] = useState("home");
   const [popularPeriod, setPopularPeriod] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const articlesPerPage = 10;
+  const indexOfLastArticle = currentPage * articlesPerPage;
+  const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
+  const currentArticles = articles.slice(
+    indexOfFirstArticle,
+    indexOfLastArticle
+  );
+  const totalPages = Math.ceil(articles.length / articlesPerPage);
 
   useEffect(() => {
     const loadArticles = async () => {
@@ -139,12 +148,12 @@ function App() {
             </a>
           </nav>
         </div>
-          <input
-            type="search"
-            placeholder="Search articles..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+        <input
+          type="search"
+          placeholder="Search articles..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
       </header>
 
       <div className="filters">
@@ -244,10 +253,10 @@ function App() {
           <p>No articles found.</p>
         ) : (
           <ul className="article-list">
-            {articles.map((article) => (
+            {currentArticles.map((article, index) => (
               <li key={article.id} className="article-item">
                 <span className="article-number">
-                  {articles.indexOf(article) + 1}
+                  {indexOfFirstArticle + index + 1}
                 </span>
                 <div className="article-content">
                   <h2 className="headline">
@@ -269,8 +278,30 @@ function App() {
         )}
       </main>
 
-      <div class="pagination">
-        <a href="#">&lt; Prev</a> | <a href="#">Next &gt;</a>
+      <div className="pagination">
+        <a
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            if (currentPage > 1) setCurrentPage(currentPage - 1);
+          }}
+        >
+          ← Prev
+        </a>
+
+        <span>
+          Page {currentPage} of {totalPages}{" "}
+        </span>
+
+        <a
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+          }}
+        >
+          Next →
+        </a>
       </div>
 
       <section id="chart-section">
