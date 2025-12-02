@@ -139,7 +139,12 @@ function App() {
             </a>
           </nav>
         </div>
-        <input type="search" placeholder="Search articles..." />
+          <input
+            type="search"
+            placeholder="Search articles..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
       </header>
 
       <div className="filters">
