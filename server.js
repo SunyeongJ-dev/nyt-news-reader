@@ -53,10 +53,14 @@ db.connect((err) => {
           id INT AUTO_INCREMENT PRIMARY KEY,
           user_id VARCHAR(36) NOT NULL,
           article_id VARCHAR(255) NOT NULL,
+          title VARCHAR(500),
+          section VARCHAR(100),
+          pub_date VARCHAR(100),
+          url TEXT,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           UNIQUE KEY unique_bookmark (user_id, article_id)
           )
-          `,
+        `,
         (err) => {
           if (err) {
             console.error("Error creating bookmarks table:", err);
@@ -150,25 +154,35 @@ app.listen(PORT, () => {
 
 // Bookmark toggle
 app.post("/api/bookmarks", async (req, res) => {
-  const { userId, articleId } = req.body;
+  const { userId, articleId, articleData } = req.body;
 
   try {
-    const [bookmarked] = await db.promise().query(
-      "SELECT * FROM bookmarks WHERE user_id = ? AND article_id = ?",
-      [userId, articleId]
-    );
+    const [bookmarked] = await db
+      .promise()
+      .query("SELECT * FROM bookmarks WHERE user_id = ? AND article_id = ?", [
+        userId,
+        articleId,
+      ]);
 
     if (bookmarked.length > 0) {
-      await db.promise().query(
-        "DELETE FROM bookmarks WHERE user_id = ? AND article_id = ?",
-        [userId, articleId]
-      );
+      await db
+        .promise()
+        .query("DELETE FROM bookmarks WHERE user_id = ? AND article_id = ?", [
+          userId,
+          articleId,
+        ]);
       res.json({ bookmarked: false });
     } else {
-      await db.promise().query(
-        "INSERT INTO bookmarks (user_id, article_id) VALUES (?, ?)",
-        [userId, articleId]
-      );
+      await db
+        .promise()
+        .query("INSERT INTO bookmarks (user_id, article_id, title, section, pub_date, url) VALUES (?, ?, ?, ?, ?, ?)", [
+          userId,
+          articleId,
+          articleData.title,
+          articleData.section,
+          articleData.pub_date,
+          articleData.url
+        ]);
       res.json({ bookmarked: true });
     }
   } catch (error) {
@@ -177,7 +191,7 @@ app.post("/api/bookmarks", async (req, res) => {
   }
 });
 
-// Get bookmarks from DB
+// Get bookmark IDs
 app.get("/api/bookmarks", async (req, res) => {
   const { userId } = req.query;
 
@@ -189,6 +203,22 @@ app.get("/api/bookmarks", async (req, res) => {
     const ids = rows.map((row) => row.article_id);
     res.json(ids);
 
+  } catch (error) {
+    console.error("Error fetching bookmark IDs:", error);
+    res.status(500).json({ error: "DB error during fetching bookmark IDs." });
+  }
+});
+
+// Get bookmarks with full data
+app.get("/api/bookmarks/articles", async (req, res) => {
+  const { userId } = req.query;
+
+ try {
+    const [rows] = await db.promise().query(
+      "SELECT article_id as id, title, section, pub_date, url FROM bookmarks WHERE user_id = ? ORDER BY created_at DESC",
+      [userId]
+    );
+    res.json(rows);
   } catch (error) {
     console.error("Error fetching bookmarks:", error);
     res.status(500).json({ error: "DB error during fetching bookmarks." });

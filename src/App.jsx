@@ -114,6 +114,12 @@ function App() {
 
   // Load articles when tabs or filters change
   useEffect(() => {
+    if (activeTab === "Bookmarks" && !userId) {
+      setLoading(false);
+      setArticles([]);
+      return;
+    }
+
     const loadArticles = async () => {
       setLoading(true);
       setArticles([]);
@@ -128,9 +134,13 @@ function App() {
         } else if (activeTab === "Popular") {
           fetchedArticles = await fetchMostPopular(popularPeriod);
         } else if (activeTab === "Bookmarks") {
-          fetchedArticles = articles.filter((article) =>
-            bookmarks.includes(article.id)
+          const response = await fetch(
+            `http://localhost:3000/api/bookmarks/articles?userId=${userId}`
           );
+          fetchedArticles = await response.json();
+
+          const bookmarkedIds = fetchedArticles.map((article) => article.id);
+          setBookmarks(bookmarkedIds);
         }
 
         if (searchQuery.trim()) {
@@ -148,6 +158,7 @@ function App() {
         setLoading(false);
       }
     };
+
     loadArticles();
   }, [
     activeTab,
@@ -156,6 +167,7 @@ function App() {
     searchQuery,
     selectedSection,
     popularPeriod,
+    userId,
   ]);
 
   return (
@@ -330,7 +342,9 @@ function App() {
                   </p>
                 </div>
                 <button
-                  className={`bookmark-btn ${bookmarks.includes(article.id) ? 'bookmarked' : ''}`}
+                  className={`bookmark-btn ${
+                    bookmarks.includes(article.id) ? "bookmarked" : ""
+                  }`}
                   title="Bookmark"
                   onClick={() => {
                     fetch("http://localhost:3000/api/bookmarks", {
@@ -341,6 +355,12 @@ function App() {
                       body: JSON.stringify({
                         userId,
                         articleId: article.id,
+                        articleData: {
+                          title: article.title,
+                          section: article.section,
+                          pub_date: article.pub_date,
+                          url: article.url,
+                        },
                       }),
                     })
                       .then((response) => response.json())
