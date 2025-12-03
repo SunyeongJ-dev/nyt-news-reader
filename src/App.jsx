@@ -317,6 +317,42 @@ function App() {
             </a>
           </div>
         )}
+
+        {activeTab === "Bookmarks" && bookmarks.length > 0 && (
+          <div className="clear-bookmarks-container">
+            <button
+              className="clear-btn"
+              onClick={() => {
+                if (
+                  window.confirm(
+                    "Are you sure you want to clear all bookmarks?"
+                  )
+                ) {
+                  fetch("http://localhost:3000/api/bookmarks/clear", {
+                    method: "DELETE",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ userId }),
+                  })
+                    .then((response) => response.json())
+                    .then((data) => {
+                      if (data.success) {
+                        setBookmarks([]);
+                        setArticles([]);
+                      }
+                    })
+                    .catch((error) => {
+                      console.error("Error clearing bookmarks:", error);
+                      alert("Failed to clear bookmarks");
+                    });
+                }
+              }}
+            >
+              Clear All Bookmarks
+            </button>
+          </div>
+        )}
       </div>
       <main>
         {loading ? (

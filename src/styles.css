@@ -227,6 +227,32 @@ main {
   color: var(--secondary-color);
 }
 
+.clear-bookmarks-container {
+  max-width: 1000px;
+  margin: 20px auto 0;
+  padding: 0 20px;
+  text-align: right;
+}
+
+.clear-btn {
+  padding: 8px 16px;
+  font-size: 12px;
+  font-family: var(--font-family-sans-serif);
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--primary-color);
+  transition: all 0.2s ease;
+}
+
+.clear-btn:hover {
+  color: #d9534f;
+  border-color: #d9534f;
+}
+
 .pagination {
   margin-top: 30px;
   padding: 15px 0;
