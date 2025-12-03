@@ -1,5 +1,5 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/GnMkoLD4)
-# Module 4 - [Name of your Web Application]
+# Module 4 - NYT News Reader
 
 ## Instructions
 1. You have to commit and push the folder(s) and file(s) in this repo (as you can see that it is an empty repo) so you have to organize all the files and folders as per your requirement.
